@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Login Page</title>
+    <style>
+        :root {
+            --primary-color: #4a4a4a;
+            --secondary-color: #6a6a6a;
+            --accent-color: #3498db;
+            --bg-color: #f4f4f4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .login-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            transform: scale(0.9);
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .login-title {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .login-title::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        .input-group label {
+            position: absolute;
+            top: -7px;
+            left: 10px;
+            background: white;
+            padding: 0 5px;
+            font-size: 12px;
+            color: var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        .login-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .login-btn:active {
+            transform: scale(0.98);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .password-requirements {
+            font-size: 12px;
+            color: var(--secondary-color);
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2 class="login-title">Login</h2>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <div class="password-requirements">
+                    Password must be at least 8 characters
+                </div>
+            </div>
+            
+            <div id="errorMessage" class="error-message"></div>
+            
+            <button type="submit" class="login-btn">Sign In</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Client-side validation
+            function validateUsername(username) {
+                return username.length >= 3;
+            }
+
+            function validatePassword(password) {
+                return password.length >= 8;
+            }
+
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value;
+
+                // Reset error message
+                errorMessage.textContent = '';
+                errorMessage.style.opacity = '0';
+
+                // Validation checks
+                if (!validateUsername(username)) {
+                    errorMessage.textContent = 'Username must be at least 3 characters';
+                    errorMessage.style.opacity = '1';
+                    return;
+                }
+
+                if (!validatePassword(password)) {
+                    errorMessage.textContent = 'Password must be at least 8 characters';
+                    errorMessage.style.opacity = '1';
+                    return;
+                }
+
+                // Simulated login process
+                simulateLogin(username, password);
+            });
+
+            function simulateLogin(username, password) {
+                // This is a mock login - in a real app, you'd send this to a backend
+                if (username === 'demo' && password === 'password123') {
+                    errorMessage.style.color = 'green';
+                    errorMessage.textContent = 'Login Successful!';
+                    errorMessage.style.opacity = '1';
+                    
+                    // Optional: Redirect or change page after successful login
+                    setTimeout(() => {
+                        alert('Welcome, ' + username + '!');
+                    }, 1000);
+                } else {
+                    errorMessage.textContent = 'Invalid username or password';
+                    errorMessage.style.opacity = '1';
+                }
+            }
+
+            // Optional: Add some visual feedback on input
+            [usernameInput, passwordInput].forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.style.borderColor = 'var(--accent-color)';
+                });
+
+                input.addEventListener('blur', () => {
+                    input.style.borderColor = '#ddd';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
